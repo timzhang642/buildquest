@@ -1,65 +1,89 @@
-import Image from "next/image";
+import Link from "next/link";
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+      <header className="px-6 py-5">
+        <div className="max-w-5xl mx-auto flex items-center justify-between">
+          <h1 className="text-xl font-bold text-gray-900">BuildQuest</h1>
+          <div className="flex items-center gap-3">
+            <Link
+              href="/login"
+              className="text-sm text-gray-600 hover:text-gray-900 transition"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              Log in
+            </Link>
+            <Link
+              href="/signup"
+              className="text-sm py-2 px-4 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition"
             >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+              Sign up
+            </Link>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </header>
+
+      <main className="max-w-5xl mx-auto px-6 pt-20 pb-32">
+        <div className="text-center max-w-3xl mx-auto">
+          <h2 className="text-5xl font-bold text-gray-900 leading-tight">
+            Your teen builds real projects.
+            <br />
+            <span className="text-indigo-600">AI coaches them through it.</span>
+          </h2>
+          <p className="text-xl text-gray-500 mt-6 max-w-2xl mx-auto leading-relaxed">
+            BuildQuest gives your 13+ teen a personal AI coach that helps them
+            pick a project, break it into steps, and actually finish it. You get
+            a weekly progress report. No nagging required.
+          </p>
+          <div className="mt-10 flex items-center justify-center gap-4">
+            <Link
+              href="/signup"
+              className="py-3 px-8 bg-indigo-600 text-white rounded-xl font-semibold text-lg hover:bg-indigo-700 transition shadow-lg shadow-indigo-200"
+            >
+              Get Started Free
+            </Link>
+          </div>
+        </div>
+
+        <div className="mt-24 grid md:grid-cols-3 gap-8">
+          <div className="bg-white rounded-2xl p-8 border border-gray-100">
+            <div className="text-3xl mb-4">&#127919;</div>
+            <h3 className="font-semibold text-gray-900 text-lg mb-2">
+              Teen picks their project
+            </h3>
+            <p className="text-gray-500 text-sm leading-relaxed">
+              No boring templates. Your teen decides what to build — a website,
+              an app, a tool. The coach helps them scope it.
+            </p>
+          </div>
+          <div className="bg-white rounded-2xl p-8 border border-gray-100">
+            <div className="text-3xl mb-4">&#129302;</div>
+            <h3 className="font-semibold text-gray-900 text-lg mb-2">
+              AI coach guides every step
+            </h3>
+            <p className="text-gray-500 text-sm leading-relaxed">
+              Kind, specific, helpful feedback. Never writes code for them.
+              Always pushes them toward shipping something real.
+            </p>
+          </div>
+          <div className="bg-white rounded-2xl p-8 border border-gray-100">
+            <div className="text-3xl mb-4">&#128231;</div>
+            <h3 className="font-semibold text-gray-900 text-lg mb-2">
+              You get weekly updates
+            </h3>
+            <p className="text-gray-500 text-sm leading-relaxed">
+              Every Sunday: what they worked on, skills they demonstrated, honest
+              progress assessment. No dashboard to check.
+            </p>
+          </div>
         </div>
       </main>
+
+      <footer className="border-t border-gray-100 py-8 px-6">
+        <div className="max-w-5xl mx-auto text-center text-sm text-gray-400">
+          BuildQuest — AI-coached project building for teens
+        </div>
+      </footer>
     </div>
   );
 }
