@@ -10,40 +10,41 @@ export default function SignupPage() {
   const [name, setName] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [showConfirmation, setShowConfirmation] = useState(false);
 
   async function handleSignup(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     setError("");
 
-    const supabase = createClient();
-
-    const { data, error: signupError } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: { name, role: "parent" },
-      },
+    // Create user via server-side admin API (bypasses email confirmation)
+    const res = await fetch("/api/auth/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password, name }),
     });
 
-    if (signupError) {
-      setError(signupError.message);
+    const result = await res.json();
+
+    if (!res.ok) {
+      setError(result.error || "Signup failed");
       setLoading(false);
       return;
     }
 
-    if (data.user) {
-      // Profile row is created automatically by database trigger on auth.users insert.
-      // If email confirmation is required, session won't be established yet.
-      if (data.session) {
-        window.location.href = "/enroll";
-      } else {
-        // Email confirmation required
-        setShowConfirmation(true);
-        setLoading(false);
-      }
+    // User created and confirmed — now sign in to get a session
+    const supabase = createClient();
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (signInError) {
+      setError(signInError.message);
+      setLoading(false);
+      return;
     }
+
+    window.location.href = "/enroll";
   }
 
   return (
@@ -58,26 +59,6 @@ export default function SignupPage() {
           </p>
         </div>
 
-        {showConfirmation ? (
-          <div
-            className="bg-white rounded-2xl border border-cream-300 p-8 text-center space-y-4"
-            style={{ boxShadow: "var(--bq-shadow-md)" }}
-          >
-            <div className="text-4xl">📬</div>
-            <h2 className="text-xl font-display font-semibold text-charcoal-900">
-              Check your email
-            </h2>
-            <p className="text-charcoal-600">
-              We sent a confirmation link to <strong>{email}</strong>. Click it to activate your account, then come back to log in.
-            </p>
-            <Link
-              href="/login"
-              className="inline-block mt-4 text-amber-700 font-semibold hover:underline"
-            >
-              Go to login
-            </Link>
-          </div>
-        ) : (
         <form
           onSubmit={handleSignup}
           className="bg-white rounded-2xl border border-cream-300 p-8 space-y-5"
@@ -154,7 +135,6 @@ export default function SignupPage() {
             </Link>
           </p>
         </form>
-        )}
       </div>
     </div>
   );
