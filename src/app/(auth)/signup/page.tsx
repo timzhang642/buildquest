@@ -33,7 +33,6 @@ export default function SignupPage() {
     }
 
     if (data.user) {
-      // Create parent record
       const { error: parentError } = await supabase
         .from("parents")
         .insert({ id: data.user.id, email, name });
@@ -49,34 +48,34 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 to-purple-50 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-cream-100 px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">BuildQuest</h1>
-          <p className="text-gray-600 mt-2">
+          <h1 className="text-3xl font-display font-bold text-charcoal-900">
+            BuildQuest
+          </h1>
+          <p className="text-charcoal-500 mt-2">
             Sign up to enroll your teen in AI-coached project building
           </p>
         </div>
 
         <form
           onSubmit={handleSignup}
-          className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 space-y-5"
+          className="bg-white rounded-2xl border border-cream-300 p-8 space-y-5"
+          style={{ boxShadow: "var(--bq-shadow-md)" }}
         >
-          <h2 className="text-xl font-semibold text-gray-900">
+          <h2 className="text-xl font-display font-semibold text-charcoal-900">
             Parent Account
           </h2>
 
           {error && (
-            <div className="bg-red-50 text-red-700 px-4 py-3 rounded-lg text-sm">
+            <div className="bg-bq-red-50 text-bq-red-700 px-4 py-3 rounded-xl text-sm border border-bq-red-100">
               {error}
             </div>
           )}
 
           <div>
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
+            <label htmlFor="name" className="block text-sm font-medium text-charcoal-700 mb-1">
               Your Name
             </label>
             <input
@@ -85,16 +84,13 @@ export default function SignupPage() {
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition text-gray-900"
+              className="w-full px-4 py-2.5 rounded-xl border border-charcoal-200 focus:border-amber-400 focus:ring-2 focus:ring-amber-100 outline-none transition text-charcoal-900"
               placeholder="Jane Smith"
             />
           </div>
 
           <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
+            <label htmlFor="email" className="block text-sm font-medium text-charcoal-700 mb-1">
               Email
             </label>
             <input
@@ -103,16 +99,13 @@ export default function SignupPage() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition text-gray-900"
+              className="w-full px-4 py-2.5 rounded-xl border border-charcoal-200 focus:border-amber-400 focus:ring-2 focus:ring-amber-100 outline-none transition text-charcoal-900"
               placeholder="parent@example.com"
             />
           </div>
 
           <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
+            <label htmlFor="password" className="block text-sm font-medium text-charcoal-700 mb-1">
               Password
             </label>
             <input
@@ -122,7 +115,7 @@ export default function SignupPage() {
               minLength={8}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition text-gray-900"
+              className="w-full px-4 py-2.5 rounded-xl border border-charcoal-200 focus:border-amber-400 focus:ring-2 focus:ring-amber-100 outline-none transition text-charcoal-900"
               placeholder="At least 8 characters"
             />
           </div>
@@ -130,14 +123,14 @@ export default function SignupPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-2.5 px-4 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 disabled:opacity-50 transition"
+            className="w-full py-2.5 px-4 bg-amber-500 text-charcoal-900 rounded-xl font-bold hover:bg-amber-400 disabled:opacity-50 transition"
           >
             {loading ? "Creating account..." : "Create Parent Account"}
           </button>
 
-          <p className="text-center text-sm text-gray-500">
+          <p className="text-center text-sm text-charcoal-500">
             Already have an account?{" "}
-            <Link href="/login" className="text-indigo-600 hover:underline">
+            <Link href="/login" className="text-amber-700 font-semibold hover:underline">
               Log in
             </Link>
           </p>

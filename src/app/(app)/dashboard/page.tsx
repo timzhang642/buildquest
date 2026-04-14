@@ -10,7 +10,6 @@ export default async function DashboardPage() {
   const supabase = createServiceRoleClient();
 
   if (session.type === "teen") {
-    // Teen dashboard: show their quests
     const { data: quests } = await supabase
       .from("quests")
       .select("id, title, description, status, started_at, target_ship_date")
@@ -18,18 +17,20 @@ export default async function DashboardPage() {
       .order("started_at", { ascending: false });
 
     return (
-      <div className="min-h-screen bg-gray-50">
-        <header className="bg-white border-b border-gray-100 px-6 py-4">
+      <div className="min-h-screen bg-cream-100">
+        <header className="bg-white border-b border-cream-300 px-6 py-4">
           <div className="max-w-4xl mx-auto flex items-center justify-between">
-            <h1 className="text-xl font-bold text-gray-900">BuildQuest</h1>
+            <h1 className="text-xl font-display font-bold text-charcoal-900">
+              BuildQuest
+            </h1>
             <div className="flex items-center gap-4">
-              <span className="text-sm text-gray-500">
+              <span className="text-sm text-charcoal-500">
                 Hey, {session.name}!
               </span>
               <form action="/api/auth/logout" method="POST">
                 <button
                   type="submit"
-                  className="text-sm text-gray-400 hover:text-gray-600"
+                  className="text-sm text-charcoal-400 hover:text-charcoal-700 transition"
                 >
                   Log out
                 </button>
@@ -40,28 +41,31 @@ export default async function DashboardPage() {
 
         <main className="max-w-4xl mx-auto px-6 py-8">
           <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl font-bold text-gray-900">Your Quests</h2>
+            <h2 className="text-2xl font-display font-bold text-charcoal-900">
+              Your Quests
+            </h2>
             <Link
               href="/quest/new"
-              className="py-2 px-4 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition text-sm"
+              className="py-2 px-4 bg-amber-500 text-charcoal-900 rounded-lg font-semibold hover:bg-amber-400 transition text-sm"
             >
               Start New Quest
             </Link>
           </div>
 
           {!quests?.length ? (
-            <div className="text-center py-16 bg-white rounded-2xl border border-gray-100">
-              <div className="text-4xl mb-4">🚀</div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            <div className="text-center py-16 bg-white rounded-2xl border border-cream-300">
+              <div className="text-4xl mb-4">🧭</div>
+              <h3 className="text-lg font-display font-semibold text-charcoal-900 mb-2">
                 Ready to build something?
               </h3>
-              <p className="text-gray-500 mb-6 max-w-md mx-auto">
+              <p className="text-charcoal-500 mb-6 max-w-md mx-auto">
                 Your AI coach will help you figure out what to build and guide
                 you through every step.
               </p>
               <Link
                 href="/quest/new"
-                className="inline-block py-2.5 px-6 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition"
+                className="inline-block py-2.5 px-6 bg-amber-500 text-charcoal-900 rounded-xl font-bold hover:bg-amber-400 transition"
+                style={{ boxShadow: "0 4px 16px rgba(245,158,11,0.2)" }}
               >
                 Start Your First Quest
               </Link>
@@ -72,34 +76,37 @@ export default async function DashboardPage() {
                 <Link
                   key={quest.id}
                   href={`/quest/${quest.id}`}
-                  className="block bg-white rounded-xl border border-gray-100 p-6 hover:border-indigo-200 hover:shadow-sm transition"
+                  className="block bg-white rounded-xl border border-cream-300 p-6 hover:border-amber-300 hover:shadow-sm transition"
                 >
                   <div className="flex items-start justify-between">
                     <div>
-                      <h3 className="font-semibold text-gray-900">
+                      <h3 className="font-semibold text-charcoal-900">
                         {quest.title}
                       </h3>
-                      <p className="text-sm text-gray-500 mt-1 line-clamp-2">
+                      <p className="text-sm text-charcoal-500 mt-1 line-clamp-2">
                         {quest.description}
                       </p>
                     </div>
                     <span
-                      className={`text-xs font-medium px-2.5 py-1 rounded-full ${
+                      className={`text-xs font-semibold px-2.5 py-1 rounded-full font-mono uppercase tracking-wide ${
                         quest.status === "active"
-                          ? "bg-green-50 text-green-700"
+                          ? "bg-sage-50 text-sage-700"
                           : quest.status === "completed"
-                          ? "bg-blue-50 text-blue-700"
-                          : "bg-gray-50 text-gray-500"
+                          ? "bg-amber-50 text-amber-700"
+                          : "bg-charcoal-50 text-charcoal-500"
                       }`}
                     >
                       {quest.status}
                     </span>
                   </div>
                   {quest.target_ship_date && (
-                    <p className="text-xs text-gray-400 mt-3">
-                      Ship Day:{" "}
-                      {new Date(quest.target_ship_date).toLocaleDateString()}
-                    </p>
+                    <div className="flex items-center gap-1.5 mt-3">
+                      <span className="text-xs">🚀</span>
+                      <p className="text-xs text-charcoal-400 font-mono">
+                        Ship Day:{" "}
+                        {new Date(quest.target_ship_date).toLocaleDateString()}
+                      </p>
+                    </div>
                   )}
                 </Link>
               ))}
@@ -110,7 +117,7 @@ export default async function DashboardPage() {
     );
   }
 
-  // Parent dashboard: show their teens and quest status
+  // Parent dashboard
   const { data: teens } = await supabase
     .from("teens")
     .select(
@@ -122,18 +129,20 @@ export default async function DashboardPage() {
     .eq("parent_id", session.id);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b border-gray-100 px-6 py-4">
+    <div className="min-h-screen bg-cream-100">
+      <header className="bg-white border-b border-cream-300 px-6 py-4">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <h1 className="text-xl font-bold text-gray-900">BuildQuest</h1>
+          <h1 className="text-xl font-display font-bold text-charcoal-900">
+            BuildQuest
+          </h1>
           <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-500">
+            <span className="text-sm text-charcoal-500">
               Hi, {session.name}
             </span>
             <form action="/api/auth/logout" method="POST">
               <button
                 type="submit"
-                className="text-sm text-gray-400 hover:text-gray-600"
+                className="text-sm text-charcoal-400 hover:text-charcoal-700 transition"
               >
                 Log out
               </button>
@@ -144,27 +153,29 @@ export default async function DashboardPage() {
 
       <main className="max-w-4xl mx-auto px-6 py-8">
         <div className="flex items-center justify-between mb-8">
-          <h2 className="text-2xl font-bold text-gray-900">Your Teens</h2>
+          <h2 className="text-2xl font-display font-bold text-charcoal-900">
+            Your Teens
+          </h2>
           <Link
             href="/enroll"
-            className="py-2 px-4 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition text-sm"
+            className="py-2 px-4 bg-amber-500 text-charcoal-900 rounded-lg font-semibold hover:bg-amber-400 transition text-sm"
           >
             Enroll Another Teen
           </Link>
         </div>
 
         {!teens?.length ? (
-          <div className="text-center py-16 bg-white rounded-2xl border border-gray-100">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+          <div className="text-center py-16 bg-white rounded-2xl border border-cream-300">
+            <h3 className="text-lg font-display font-semibold text-charcoal-900 mb-2">
               No teens enrolled yet
             </h3>
-            <p className="text-gray-500 mb-6">
+            <p className="text-charcoal-500 mb-6">
               Enroll your teen to get them started with AI-coached project
               building.
             </p>
             <Link
               href="/enroll"
-              className="inline-block py-2.5 px-6 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition"
+              className="inline-block py-2.5 px-6 bg-amber-500 text-charcoal-900 rounded-xl font-bold hover:bg-amber-400 transition"
             >
               Enroll Teen
             </Link>
@@ -174,30 +185,30 @@ export default async function DashboardPage() {
             {teens.map((teen: any) => (
               <div
                 key={teen.id}
-                className="bg-white rounded-xl border border-gray-100 p-6"
+                className="bg-white rounded-xl border border-cream-300 p-6"
               >
-                <h3 className="font-semibold text-gray-900 text-lg">
+                <h3 className="font-display font-semibold text-charcoal-900 text-lg">
                   {teen.name}
                 </h3>
-                <p className="text-sm text-gray-400">@{teen.username}</p>
+                <p className="text-sm text-charcoal-400 font-mono">@{teen.username}</p>
 
                 {teen.quests?.length ? (
                   <div className="mt-4 space-y-2">
                     {teen.quests.map((quest: any) => (
                       <div
                         key={quest.id}
-                        className="flex items-center justify-between bg-gray-50 rounded-lg px-4 py-3"
+                        className="flex items-center justify-between bg-cream-100 rounded-lg px-4 py-3"
                       >
-                        <span className="text-sm text-gray-700">
+                        <span className="text-sm text-charcoal-700">
                           {quest.title}
                         </span>
                         <span
-                          className={`text-xs font-medium px-2.5 py-1 rounded-full ${
+                          className={`text-xs font-semibold px-2.5 py-1 rounded-full font-mono uppercase tracking-wide ${
                             quest.status === "active"
-                              ? "bg-green-50 text-green-700"
+                              ? "bg-sage-50 text-sage-700"
                               : quest.status === "completed"
-                              ? "bg-blue-50 text-blue-700"
-                              : "bg-gray-100 text-gray-500"
+                              ? "bg-amber-50 text-amber-700"
+                              : "bg-charcoal-50 text-charcoal-500"
                           }`}
                         >
                           {quest.status}
@@ -206,7 +217,7 @@ export default async function DashboardPage() {
                     ))}
                   </div>
                 ) : (
-                  <p className="text-sm text-gray-400 mt-3">
+                  <p className="text-sm text-charcoal-400 mt-3">
                     No quests started yet
                   </p>
                 )}

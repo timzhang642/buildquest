@@ -2,23 +2,37 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { PromptChip } from "@/components/prompt-chip";
+
+const suggestions = [
+  "A website for my dog walking business",
+  "A quiz app for my study group",
+  "A weather dashboard for my family",
+  "A personal portfolio to show colleges",
+  "A recipe organizer for my favorite meals",
+  "A tool to track my workout progress",
+];
 
 export default function NewQuestPage() {
   const router = useRouter();
-  const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  function handleChipClick(label: string) {
+    setDescription(label);
+  }
+
   async function handleCreate(e: React.FormEvent) {
     e.preventDefault();
+    if (!description.trim()) return;
     setLoading(true);
     setError("");
 
     const res = await fetch("/api/quests", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title, description }),
+      body: JSON.stringify({ title: description.trim(), description: description.trim() }),
     });
 
     if (!res.ok) {
@@ -33,77 +47,60 @@ export default function NewQuestPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b border-gray-100 px-6 py-4">
+    <div className="min-h-screen bg-cream-100 flex flex-col">
+      {/* Header */}
+      <header className="bg-white border-b border-cream-300 px-6 py-4">
         <div className="max-w-2xl mx-auto">
-          <h1 className="text-xl font-bold text-gray-900">
-            Start a New Quest
+          <h1 className="text-xl font-display font-bold text-charcoal-900">
+            BuildQuest
           </h1>
         </div>
       </header>
 
-      <main className="max-w-2xl mx-auto px-6 py-8">
-        <div className="bg-white rounded-2xl border border-gray-100 p-8">
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+      {/* Main — first open screen: "What do you want to build?" */}
+      <main className="flex-1 flex items-center justify-center px-6 py-12">
+        <div className="max-w-lg w-full">
+          <div className="text-center mb-8">
+            <div className="text-5xl mb-4">🧭</div>
+            <h2 className="font-display text-3xl font-bold text-charcoal-900 leading-tight">
               What do you want to build?
             </h2>
-            <p className="text-gray-500">
-              Your AI coach will help you turn this idea into a real, finished
-              project. It can be anything — a website, an app, a tool, a game.
-              The only rule: you have to be excited about it.
+            <p className="text-charcoal-500 mt-3">
+              Tell your coach about your idea. It can be anything — a website,
+              an app, a tool, a game. The only rule: you have to be excited about it.
             </p>
           </div>
 
-          <form onSubmit={handleCreate} className="space-y-6">
+          <form onSubmit={handleCreate} className="space-y-5">
             {error && (
-              <div className="bg-red-50 text-red-700 px-4 py-3 rounded-lg text-sm">
+              <div className="bg-bq-red-50 text-bq-red-700 px-4 py-3 rounded-xl text-sm border border-bq-red-100">
                 {error}
               </div>
             )}
 
-            <div>
-              <label
-                htmlFor="title"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Project Title
-              </label>
-              <input
-                id="title"
-                type="text"
-                required
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition text-gray-900"
-                placeholder="e.g., A website for my neighborhood book exchange"
-              />
-            </div>
+            <textarea
+              required
+              rows={4}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className="w-full px-4 py-3 rounded-xl border border-charcoal-200 bg-white focus:border-amber-400 focus:ring-2 focus:ring-amber-100 outline-none transition text-charcoal-900 resize-none text-base placeholder:text-charcoal-300"
+              placeholder="I want to build..."
+            />
 
-            <div>
-              <label
-                htmlFor="description"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Tell your coach about it
-              </label>
-              <textarea
-                id="description"
-                required
-                rows={4}
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition text-gray-900 resize-none"
-                placeholder="What problem does it solve? Who is it for? What are you excited about?"
-              />
+            {/* Suggestion chips */}
+            <div className="flex flex-wrap gap-2">
+              {suggestions.map((s) => (
+                <PromptChip key={s} label={s} onClick={handleChipClick} />
+              ))}
             </div>
 
             <button
               type="submit"
-              disabled={loading}
-              className="w-full py-3 px-4 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 disabled:opacity-50 transition text-base"
+              disabled={loading || !description.trim()}
+              className="w-full py-3 px-4 bg-amber-500 text-charcoal-900 rounded-xl font-bold hover:bg-amber-400 disabled:opacity-40 transition text-base"
+              style={{ boxShadow: "var(--bq-shadow-amber)" }}
             >
-              {loading ? "Creating quest..." : "Start Quest"}
+              {loading ? "Starting your quest..." : "Start Quest →"}
             </button>
           </form>
         </div>
