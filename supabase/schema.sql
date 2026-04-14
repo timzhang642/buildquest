@@ -83,6 +83,10 @@ alter table public.weekly_emails enable row level security;
 create policy "Parents read own" on public.parents
   for select using (auth.uid() = id);
 
+-- Parents can insert their own row (for direct signup without trigger)
+create policy "Parents insert own" on public.parents
+  for insert with check (auth.uid() = id);
+
 -- Parents can read their teens
 create policy "Parents read own teens" on public.teens
   for select using (parent_id = auth.uid());
@@ -90,5 +94,21 @@ create policy "Parents read own teens" on public.teens
 -- Parents can insert teens
 create policy "Parents insert teens" on public.teens
   for insert with check (parent_id = auth.uid());
+
+-- Auto-create parent profile on auth user creation
+create or replace function public.handle_new_user()
+returns trigger as $$
+begin
+  insert into public.parents (id, email, name)
+  values (new.id, new.email, coalesce(new.raw_user_meta_data->>'name', 'Parent'))
+  on conflict (id) do nothing;
+  return new;
+end;
+$$ language plpgsql security definer;
+
+create trigger on_auth_user_created
+  after insert on auth.users
+  for each row
+  execute function public.handle_new_user();
 
 -- Service role bypasses RLS for API routes (teen auth is app-managed)

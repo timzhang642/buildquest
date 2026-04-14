@@ -10,6 +10,7 @@ export default function SignupPage() {
   const [name, setName] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
   async function handleSignup(e: React.FormEvent) {
     e.preventDefault();
@@ -33,17 +34,15 @@ export default function SignupPage() {
     }
 
     if (data.user) {
-      const { error: parentError } = await supabase
-        .from("parents")
-        .insert({ id: data.user.id, email, name });
-
-      if (parentError) {
-        setError("Account created but profile setup failed. Please contact support.");
+      // Profile row is created automatically by database trigger on auth.users insert.
+      // If email confirmation is required, session won't be established yet.
+      if (data.session) {
+        window.location.href = "/enroll";
+      } else {
+        // Email confirmation required
+        setShowConfirmation(true);
         setLoading(false);
-        return;
       }
-
-      window.location.href = "/enroll";
     }
   }
 
@@ -59,6 +58,26 @@ export default function SignupPage() {
           </p>
         </div>
 
+        {showConfirmation ? (
+          <div
+            className="bg-white rounded-2xl border border-cream-300 p-8 text-center space-y-4"
+            style={{ boxShadow: "var(--bq-shadow-md)" }}
+          >
+            <div className="text-4xl">📬</div>
+            <h2 className="text-xl font-display font-semibold text-charcoal-900">
+              Check your email
+            </h2>
+            <p className="text-charcoal-600">
+              We sent a confirmation link to <strong>{email}</strong>. Click it to activate your account, then come back to log in.
+            </p>
+            <Link
+              href="/login"
+              className="inline-block mt-4 text-amber-700 font-semibold hover:underline"
+            >
+              Go to login
+            </Link>
+          </div>
+        ) : (
         <form
           onSubmit={handleSignup}
           className="bg-white rounded-2xl border border-cream-300 p-8 space-y-5"
@@ -135,6 +154,7 @@ export default function SignupPage() {
             </Link>
           </p>
         </form>
+        )}
       </div>
     </div>
   );
