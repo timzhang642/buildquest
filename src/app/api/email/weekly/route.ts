@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { sendWeeklyReports } from "@/lib/email/weekly-report";
 
-export async function POST(request: NextRequest) {
+async function handleWeeklyEmail(request: NextRequest) {
   // Verify cron secret for security
   const authHeader = request.headers.get("authorization");
   if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
@@ -11,3 +11,6 @@ export async function POST(request: NextRequest) {
   const result = await sendWeeklyReports();
   return Response.json(result);
 }
+
+export const GET = handleWeeklyEmail;
+export const POST = handleWeeklyEmail;
