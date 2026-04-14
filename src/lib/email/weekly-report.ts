@@ -2,8 +2,13 @@ import Anthropic from "@anthropic-ai/sdk";
 import { Resend } from "resend";
 import { createServiceRoleClient } from "@/lib/supabase/server";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-const anthropic = new Anthropic();
+function getResend() {
+  return new Resend(process.env.RESEND_API_KEY);
+}
+
+function getAnthropic() {
+  return new Anthropic();
+}
 
 export async function sendWeeklyReports() {
   const supabase = createServiceRoleClient();
@@ -75,7 +80,7 @@ If zero activity, say "${teen.name} didn't log in this week" — no fake progres
 Keep it under 300 words. Use plain language. Be honest but encouraging.
 Output ONLY the email body in HTML (no subject, no wrapper).`;
 
-    const summaryResponse = await anthropic.messages.create({
+    const summaryResponse = await getAnthropic().messages.create({
       model: "claude-haiku-4-5-20251001",
       max_tokens: 1024,
       messages: [{ role: "user", content: summaryPrompt }],
@@ -87,7 +92,7 @@ Output ONLY the email body in HTML (no subject, no wrapper).`;
     const subject = `BuildQuest Weekly: ${teen.name}'s progress on "${quest.title}"`;
 
     // Send email
-    await resend.emails.send({
+    await getResend().emails.send({
       from: process.env.FROM_EMAIL ?? "BuildQuest <noreply@buildquest.app>",
       to: parent.email,
       subject,

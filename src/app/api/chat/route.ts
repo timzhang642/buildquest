@@ -3,7 +3,9 @@ import Anthropic from "@anthropic-ai/sdk";
 import { createServiceRoleClient } from "@/lib/supabase/server";
 import { buildMessages } from "@/lib/ai/coach";
 
-const anthropic = new Anthropic();
+function getAnthropic() {
+  return new Anthropic();
+}
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
@@ -60,7 +62,7 @@ export async function POST(request: NextRequest) {
   );
 
   // Call Claude
-  const response = await anthropic.messages.create({
+  const response = await getAnthropic().messages.create({
     model: "claude-sonnet-4-5-20250514",
     max_tokens: 1024,
     system: messages[0].content,
