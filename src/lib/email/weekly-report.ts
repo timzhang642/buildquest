@@ -289,7 +289,7 @@ Write in a warm, honest voice. Under 200 words. Output ONLY the email body text 
     );
 
     await getResend().emails.send({
-      from: process.env.FROM_EMAIL ?? "BuildQuest <noreply@buildquest.app>",
+      from: process.env.FROM_EMAIL ?? "BuildQuest <onboarding@resend.dev>",
       to: parent.email,
       subject,
       html,
